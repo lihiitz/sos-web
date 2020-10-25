@@ -8,6 +8,13 @@ function myFunction() {
   socket.on('userConnected', (users) => {
     $('#onlineUsers').empty()
     users.forEach(user => {
-      $('#onlineUsers').append($('<li>').text(user))
+      $('#onlineUsers').append($('<li>').text(user.userName))
+    })
+  })
+
+  socket.on('userDisconnected', (users) => {
+    $('#onlineUsers').empty()
+    users.forEach(user => {
+      $('#onlineUsers').append($('<li>').text(user.userName))
     })
   })

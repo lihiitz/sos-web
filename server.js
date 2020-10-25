@@ -19,17 +19,36 @@ app.use(`/`, api)
 
 let users = []
 
-io.on('connection', (socket) => {
-    console.log('a user connected')
+let allClients = []
+
+io.on('connection', function(socket) {
     socket.on('userConnected', (userName) => {
-      users.push(userName)
-      io.emit('userConnected', users)
       console.log(userName + " is online")
+      allClients.push({userName, id: socket.id})
+      io.emit('userConnected', allClients)
     })
-    socket.on('disconnect', () => {
-      console.log('user disconnected')
-    })
-  })
+   socket.on('disconnect', function() {
+      let index
+      for (let i = 0; i < allClients.length; i++){
+        if (allClients[i].socket === socket){
+          index = i
+        }
+      }
+      allClients.splice(index, 1)
+      io.emit('userDisconnected', allClients)
+   })
+})
+// io.on('connection', (socket) => {
+//     console.log(socket.conn.id + ' connected')
+//     socket.on('userConnected', (userName) => {
+//       users.push(userName)
+//       io.emit('userConnected', users)
+//       console.log(userName + " is online")
+//     })
+//     socket.on('disconnect', (socket) => {
+//       console.log(socket.conn.id + ' disconnected')
+//     })
+//   })
 ///////////////////////////////////
 const PORT = 3000
 
