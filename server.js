@@ -19,23 +19,23 @@ app.use(`/`, api)
 
 let users = []
 
-let allClients = []
 
 io.on('connection', function(socket) {
     socket.on('userConnected', (userName) => {
       console.log(userName + " is online")
-      allClients.push({userName, id: socket.id})
-      io.emit('userConnected', allClients)
+      users.push({userName, id: socket.id})
+      io.emit('userConnected', users)
     })
    socket.on('disconnect', function() {
       let index
-      for (let i = 0; i < allClients.length; i++){
-        if (allClients[i].socket === socket){
+      for (let i = 0; i < users.length; i++){
+        if (users[i].id === socket.id){
+          console.log(users[i].userName + " disconnected")
           index = i
         }
       }
-      allClients.splice(index, 1)
-      io.emit('userDisconnected', allClients)
+      users.splice(index, 1)
+      io.emit('userDisconnected', users)
    })
 })
 // io.on('connection', (socket) => {
